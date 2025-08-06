@@ -1,2 +1,3 @@
 from .transaction_serializers import TransactionSerializer
 from .user_serializers import RegisterUserSerializer, AuthUserSerializer
+from .category_serializer import CategorySerializer

@@ -3,9 +3,10 @@ from django.shortcuts import render
 
 from rest_framework import viewsets
 from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAuthenticated
 
-from core.models import Transaction, MyUser
-from core.serializers import RegisterUserSerializer, AuthUserSerializer
+from core.models import Transaction, MyUser, Category
+from core.serializers import RegisterUserSerializer, AuthUserSerializer, CategorySerializer
 
 
 def say_hello(request):
@@ -50,3 +51,18 @@ class AuthUserView(viewsets.ModelViewSet):
             }, status=200)
         else:
             return JsonResponse({"error": "Invalid credentials", "ps": user.check_password(serializer.validated_data["password"])}, status=400)
+        
+
+class CategoryView(viewsets.ModelViewSet):
+    serializer_class = CategorySerializer
+    queryset = Category.objects.all()
+    permission_classes = [IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.validate_name(serializer.validated_data['name'])
+        category = serializer.save(user=request.user)
+        return JsonResponse({"message": "Category created successfully", "category_id": category.id}, status=201)
+    
+
