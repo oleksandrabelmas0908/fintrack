@@ -2,8 +2,10 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 
 from rest_framework import viewsets
+from rest_framework.authtoken.models import Token
+
 from core.models import Transaction, MyUser
-from core.serializers import RegisterUserSerializer
+from core.serializers import RegisterUserSerializer, AuthUserSerializer
 
 
 def say_hello(request):
@@ -19,4 +21,32 @@ class RegisterUserView(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.validate_email(serializer.validated_data['email'])
         user = serializer.save()
-        return JsonResponse({"message": "User created successfully", "user_id": user.id}, status=201)
+        token, _ = Token.objects.get_or_create(user=user)
+        return JsonResponse({
+            "message": "Authentication successful", 
+            "user_id": user.id, 
+            "token": token.key
+        }, status=201)
+    
+
+class AuthUserView(viewsets.ModelViewSet):
+    serializer_class = AuthUserSerializer
+    queryset = MyUser.objects.all()
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.validate(attrs=serializer.validated_data)
+        user = MyUser.objects.filter(username=serializer.validated_data["username"]).first()
+        
+        if not user:
+            return JsonResponse({"error": "User does not exist"}, status=404)
+        elif user.check_password(serializer.validated_data["password"]):
+            token, _ = Token.objects.get_or_create(user=user)
+            return JsonResponse({
+                "message": "Authentication successful", 
+                "user_id": user.id, 
+                "token": token.key
+            }, status=200)
+        else:
+            return JsonResponse({"error": "Invalid credentials", "ps": user.check_password(serializer.validated_data["password"])}, status=400)

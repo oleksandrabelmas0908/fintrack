@@ -21,6 +21,7 @@ class RegisterUserSerializer(serializers.ModelSerializer):
             user.first_name = validated_data['first_name']
 
         user.set_password(validated_data['password'])
+        user.save()
         return user
 
     def validate_email(self, value):
@@ -28,3 +29,14 @@ class RegisterUserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Email is already in use.")
         
         return value
+    
+
+class AuthUserSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=150)
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, attrs: dict):
+        if not MyUser.objects.filter(username=attrs.get("username")).exists():
+            raise serializers.ValidationError("User does not exist.")
+        
+        return attrs

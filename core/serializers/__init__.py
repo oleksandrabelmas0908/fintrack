@@ -1,2 +1,2 @@
 from .transaction_serializers import TransactionSerializer
-from .user_serializers import RegisterUserSerializer
+from .user_serializers import RegisterUserSerializer, AuthUserSerializer
