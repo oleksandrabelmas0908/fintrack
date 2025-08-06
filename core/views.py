@@ -6,7 +6,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
 
 from core.models import Transaction, MyUser, Category
-from core.serializers import RegisterUserSerializer, AuthUserSerializer, CategorySerializer
+from core.serializers import RegisterUserSerializer, AuthUserSerializer, CategorySerializer, TransactionSerializer
 
 
 def say_hello(request):
@@ -88,3 +88,75 @@ class CategoryView(viewsets.ModelViewSet):
         instance = self.get_object()
         instance.delete()
         return JsonResponse({"message": "Category deleted successfully"}, status=204)
+
+
+class TransactionView(viewsets.ModelViewSet):
+    serializer_class = TransactionSerializer
+    queryset = Transaction.objects.all()
+    permission_classes = [IsAuthenticated]
+
+    def get_transactions(self, request, *args, **kwargs):
+        transactions = self.queryset.filter(user=request.user)    
+        if not transactions:
+            return JsonResponse({"message": "No categories found for this user"}, status=404)
+        return JsonResponse({"transactions": list(transactions.values('id', 'category', 'date_of_transaction', 'amount', 'direction', 'description'))}, status=200)
+    
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return JsonResponse(serializer.data, status=200)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.validate(serializer.validated_data)
+        transaction = serializer.save(user=request.user)
+
+        if transaction.direction == Transaction.INCOME:
+            request.user.balance += transaction.amount
+        elif transaction.direction == Transaction.EXPENSE:
+            request.user.balance -= transaction.amount
+        request.user.save()
+
+        return JsonResponse({"message": "Transaction created successfully", "transaction_id": transaction.id}, status=201)
+    
+    def update(self, request, *args, **kwargs): 
+        instance = self.get_object()
+
+        if instance.direction == Transaction.INCOME:
+            request.user.balance -= instance.amount
+        elif instance.direction == Transaction.EXPENSE:
+            request.user.balance += instance.amount
+        request.user.save()
+
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.validate(serializer.validated_data)
+        transaction = serializer.save(user=request.user)
+
+        if transaction.direction == Transaction.INCOME:
+            request.user.balance += transaction.amount
+        elif transaction.direction == Transaction.EXPENSE:
+            request.user.balance -= transaction.amount
+        request.user.save()
+
+        
+
+        return JsonResponse({"message": "Transaction updated successfully", "transaction_id": transaction.id}, status=200)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance.direction == Transaction.INCOME:
+            request.user.balance -= instance.amount
+        elif instance.direction == Transaction.EXPENSE:
+            request.user.balance += instance.amount
+        request.user.save()
+        instance.delete()
+        return JsonResponse({"message": "Transaction deleted successfully"}, status=204)
+
+    def clear_all(self, request, *args, **kwargs):
+        Transaction.objects.filter(user=request.user).delete()
+        user = request.user
+        user.balance = 0
+        user.save()
+        return JsonResponse({"message": "All transactions cleared successfully"}, status=204)

@@ -31,6 +31,45 @@
 # Authorization: Token 266168faf36f976412ad4caa546c9df4d167513c
 
 
-GET http://localhost:8000/category/
+# GET http://localhost:8000/category/
+# Content-Type: application/json
+# Authorization: Token 266168faf36f976412ad4caa546c9df4d167513c
+
+
+# POST http://localhost:8000/transaction/
+# Content-Type: application/json
+# Authorization: Token 266168faf36f976412ad4caa546c9df4d167513c
+
+# {
+#     "amount": 100,
+#     "direction": "income"
+# }
+
+
+# GET http://localhost:8000/transactions/
+# Content-Type: application/json
+# Authorization: Token 266168faf36f976412ad4caa546c9df4d167513c
+
+
+# DELETE http://localhost:8000/transactions/
+# Content-Type: application/json
+# Authorization: Token 266168faf36f976412ad4caa546c9df4d167513c
+
+
+# GET http://localhost:8000/transaction/12/
+# Content-Type: application/json
+# Authorization: Token 266168faf36f976412ad4caa546c9df4d167513c
+
+
+# PUT http://localhost:8000/transaction/30/
+# Content-Type: application/json
+# Authorization: Token 266168faf36f976412ad4caa546c9df4d167513c
+
+# {
+#     "amount": 200,
+#     "direction": "expense"
+# }
+
+DELETE http://localhost:8000/transaction/31/
 Content-Type: application/json
 Authorization: Token 266168faf36f976412ad4caa546c9df4d167513c
