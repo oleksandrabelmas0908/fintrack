@@ -11,5 +11,6 @@ urlpatterns = [
     path("register/", RegisterUserView.as_view({'post': 'create'}), name="register_user"),
     path("auth/", AuthUserView.as_view({'post': 'post'}), name="auth_user"),  
 
-    path("category/", CategoryView.as_view({'post': 'create'}), name="category"),
+    path("category/", CategoryView.as_view({'post': 'create', 'get': 'get_queryset'}), name="category"),
+    path("category/<int:pk>/", CategoryView.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name="category_detail"),
 ]

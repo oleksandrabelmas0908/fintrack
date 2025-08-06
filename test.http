@@ -17,10 +17,20 @@
 # }
 
 
-POST http://localhost:8000/category/
+# POST http://localhost:8000/category/
+# Content-Type: application/json
+# Authorization: Token 266168faf36f976412ad4caa546c9df4d167513c
+
+# {
+#     "name": "test1"
+# }
+
+
+# DELETE  http://localhost:8000/category/1/
+# Content-Type: application/json
+# Authorization: Token 266168faf36f976412ad4caa546c9df4d167513c
+
+
+GET http://localhost:8000/category/
 Content-Type: application/json
 Authorization: Token 266168faf36f976412ad4caa546c9df4d167513c
-
-{
-    "name": "test1"
-}

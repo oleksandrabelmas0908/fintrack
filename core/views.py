@@ -58,6 +58,12 @@ class CategoryView(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self, request):
+        categories = self.queryset.filter(user=request.user)    
+        if not categories:
+            return JsonResponse({"message": "No categories found for this user"}, status=404)
+        return JsonResponse({"categories": list(categories.values('id', 'name'))}, status=200)
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -65,4 +71,20 @@ class CategoryView(viewsets.ModelViewSet):
         category = serializer.save(user=request.user)
         return JsonResponse({"message": "Category created successfully", "category_id": category.id}, status=201)
     
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return JsonResponse(serializer.data, status=200)
 
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.validate_name(serializer.validated_data['name'])
+        category = serializer.save()
+        return JsonResponse({"message": "Category updated successfully", "category_id": category.id}, status=200)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()
+        return JsonResponse({"message": "Category deleted successfully"}, status=204)
