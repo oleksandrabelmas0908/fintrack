@@ -7,8 +7,8 @@ import { TrendChart } from "@/components/trend-chart";
 import { Wallet, TrendingUp, TrendingDown, DollarSign } from "lucide-react";
 
 import { logout } from "../lib/auth";
-import { Button } from "@/components/ui/button";
-import { User, getUser } from "@/lib/user";
+import { Button } from "../components/ui/button";
+import { User, getUser } from "../lib/user";
 
 
 export default function Dashboard() {

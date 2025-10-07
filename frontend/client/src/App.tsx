@@ -7,6 +7,7 @@ import {
 import Dashboard from "./pages/dashboard";
 import LoginPage from "./pages/login";
 import RegisterPage from "./pages/register";
+import { useAuth } from "./AuthContex";
 // import { Switch, Route } from "wouter";
 // import { queryClient } from "./lib/queryClient";
 // import { QueryClientProvider } from "@tanstack/react-query";
@@ -45,7 +46,7 @@ import RegisterPage from "./pages/register";
 // export default App;
 
 function App() {
-  const isAuthenticated = !!localStorage.getItem("access_token");
+  const { isAuthenticated } = useAuth();
 
   return (
     <Router>
