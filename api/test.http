@@ -1,0 +1,97 @@
+# POST http://localhost:8000/register/
+# Content-Type: application/json
+
+# {
+#     "username": "test4",
+#     "password": "123",
+#     "email": "test4@gmail.com"
+# }
+
+
+# POST http://localhost:8000/auth/
+# Content-Type: application/json
+
+# {
+#     "username": "test4",
+#     "password": "123"
+# }
+
+
+# POST http://localhost:8000/category/
+# Content-Type: application/json
+# Authorization: Token 266168faf36f976412ad4caa546c9df4d167513c
+
+# {
+#     "name": "test1"
+# }
+
+
+# DELETE  http://localhost:8000/category/1/
+# Content-Type: application/json
+# Authorization: Token 266168faf36f976412ad4caa546c9df4d167513c
+
+
+# GET http://localhost:8000/category/
+# Content-Type: application/json
+# Authorization: Token 266168faf36f976412ad4caa546c9df4d167513c
+
+
+# POST http://localhost:8000/transaction/
+# Content-Type: application/json
+# Authorization: Token 266168faf36f976412ad4caa546c9df4d167513c
+
+# {
+#     "amount": 100,
+#     "direction": "income"
+# }
+
+
+# GET http://localhost:8000/transactions/
+# Content-Type: application/json
+# Authorization: Token 266168faf36f976412ad4caa546c9df4d167513c
+
+
+# DELETE http://localhost:8000/transactions/
+# Content-Type: application/json
+# Authorization: Token 266168faf36f976412ad4caa546c9df4d167513c
+
+
+# GET http://localhost:8000/transaction/12/
+# Content-Type: application/json
+# Authorization: Token 266168faf36f976412ad4caa546c9df4d167513c
+
+
+# PUT http://localhost:8000/transaction/30/
+# Content-Type: application/json
+# Authorization: Token 266168faf36f976412ad4caa546c9df4d167513c
+
+# {
+#     "amount": 200,
+#     "direction": "expense"
+# }
+
+# DELETE http://localhost:8000/transaction/31/
+# Content-Type: application/json
+# Authorization: Token 266168faf36f976412ad4caa546c9df4d167513c
+
+
+# GET http://localhost:8000/user/
+# Content-Type: application/json
+# Authorization: Token 266168faf36f976412ad4caa546c9df4d167513c
+
+
+# PUT http://localhost:8000/user/
+# Content-Type: application/json
+# Authorization: Token 266168faf36f976412ad4caa546c9df4d167513c
+
+# {
+#     "username": "test3",
+#     "email": "test3@gmail.com",
+#     "first_name": "Test",
+#     "last_name": "User"
+# }
+
+
+# DELETE http://localhost:8000/user/
+# Content-Type: application/json
+# Authorization: Token eaaf03b499dd6df866acf9acd6a6e2490aa19b97

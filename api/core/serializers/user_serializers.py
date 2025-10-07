@@ -1,0 +1,49 @@
+from rest_framework import serializers
+from core.models import MyUser
+
+
+class RegisterUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MyUser
+        fields = ('username', 'email', 'password', 'first_name')
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'first_name': {'required': False, 'allow_blank': True}
+        }
+
+    def create(self, validated_data):
+        user = MyUser.objects.create_user(
+            username=validated_data['username'],
+            email=validated_data['email'],
+        )
+        
+        if 'first_name' in validated_data:
+            user.first_name = validated_data['first_name']
+
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
+
+    def validate_email(self, value):
+        if MyUser.objects.filter(email=value).exists():
+            raise serializers.ValidationError("Email is already in use.")
+        
+        return value
+    
+
+class AuthUserSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=150)
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, attrs: dict):
+        if not MyUser.objects.filter(username=attrs.get("username")).exists():
+            raise serializers.ValidationError("User does not exist.")
+        
+        return attrs
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MyUser
+        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'balance')
+        read_only_fields = ('id', 'balance')

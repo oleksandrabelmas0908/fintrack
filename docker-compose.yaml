@@ -1,0 +1,26 @@
+version: '3.9'
+
+services:
+  api:
+    build: ./api
+    container_name: fintrack-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api:/app
+    networks:
+      - fintrack-net
+
+  frontend:
+    build: ./frontend
+    container_name: fintrack-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - api
+    networks:
+      - fintrack-net
+
+networks:
+  fintrack-net:
+    driver: bridge
