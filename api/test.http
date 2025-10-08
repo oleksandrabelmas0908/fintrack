@@ -1,11 +1,12 @@
-# POST http://localhost:8000/register/
-# Content-Type: application/json
+POST http://localhost:8000/register/
+Content-Type: application/json
 
-# {
-#     "username": "test4",
-#     "password": "123",
-#     "email": "test4@gmail.com"
-# }
+{
+    "username": "test4",
+    "password": "123",
+    "email": "test4@gmail.com",
+    "first_name": "Test"
+}
 
 
 # POST http://localhost:8000/auth/
